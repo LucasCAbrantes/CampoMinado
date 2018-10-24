@@ -1,0 +1,6 @@
+# depslib dependency file v1.0
+1540387893 source:/home/lab25em/Documentos/lip/CampoMInado/main.cpp
+	<iostream>
+	<stdlib.h>
+	<time.h>
+
