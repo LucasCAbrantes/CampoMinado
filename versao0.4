@@ -1,0 +1,258 @@
+#include <iostream>
+#include<stdlib.h>
+#include <time.h>
+#define Nmax 40
+using namespace std;
+
+
+
+
+void MarcaMina(int M[][Nmax], char Matriz[][Nmax], int x, int y, int& Marcaminas )
+{
+
+    cout << "Digite as cordenadas que deseja marcar"<<endl;
+    cin >> x >> y;
+    Matriz[x-1][y-1] = 'M';
+    if(M[x-1][y-1] == true)
+        Marcaminas ++;
+
+}
+void TalvezMina(int M[][Nmax], char Matriz[][Nmax], int x, int y)
+{
+    cout << "Digite o x e o y que talvez seja uma mina"<<endl;
+    cin >> x >> y;
+    Matriz[x-1][y-1] = '?';
+}
+
+void LimparMarcacao(int M[][Nmax], char Matriz[][Nmax], int x, int y)
+{
+    cout << "Digite o x e o y para limpar"<<endl;
+    cin >> x >> y;
+    Matriz[x-1][y-1]='.';
+}
+void campoMinasUsuario(char M[Nmax][Nmax],int n,int m)
+{
+
+    for (int i=0; i<n; i++)
+        for(int j=0; j<m; j++)
+            M[i][j]='.';
+
+}
+void campoMinasUsuarioFinal(char M[Nmax][Nmax],int matriz[Nmax][Nmax] ,int n,int m)
+{
+
+    for (int i=0; i<n; i++){
+        for(int j=0; j<m; j++){
+           if(matriz[i][j]==1){
+            M[i][j]='*';
+
+            }
+        if(M[i][j]=='M'&& matriz[i][j]!=1){
+                M[i][j]='X';
+
+           }
+}
+}
+}
+void campoNull(int M[Nmax][Nmax],int n,int m,int minasmax)
+{
+    int cont=0;
+    for (int i=0; i<=n; i++)
+        for(int j=0; j<=m; j++)
+            M[i][j]=0;
+
+}
+void Mostrarcampo(char M[Nmax][Nmax],int n,int m)
+{
+    int linha=1;
+    for (int i=0; i<n; i++)
+    {
+        cout << linha << "  ";
+        if (linha<10)
+            cout<<" ";
+
+        for(int j=0; j<m; j++)
+        {
+            cout<<M[i][j];
+
+        }
+        cout<<endl;
+        linha++;
+    }
+}
+void Mostrarcampominas(int M[Nmax][Nmax],int n,int m)
+{
+    int linha=1;
+    for (int i=0; i<n; i++)
+    {
+        cout << linha << "  ";
+        if (linha<10)
+            cout<<" ";
+
+        for(int j=0; j<m; j++)
+        {
+            cout<<M[i][j];
+
+        }
+        cout<<endl;
+        linha++;
+    }
+}
+void GerarMinas(int M[Nmax][Nmax],int n,int m,int minasmax)
+{
+    int x,y;
+    for(int i=0; i<minasmax; i++)
+    {
+
+        x=rand()%n;
+        y=rand()%m;
+        if (M[x][y]==0)
+            M[x][y]=1;
+        else
+            i--;
+
+    }
+}
+int  verificarLateral(int M[Nmax][Nmax],int& x,int& y)
+{
+    int cont =-1;
+    for (int i = x-1; i<=x+1; i++)
+    {
+        for(int j=(y-1); j<=( y+1 ); j++)
+        {
+            if(M[x][y]==1)
+                cont ++;
+        }
+        return cont;
+    }
+}
+void todas_laterais(int M[][Nmax], char Matriz[][Nmax],int& x,int& y)
+{
+    for(int i = x -1; i < x+1 ; i++ )
+    {
+        for(int j =  y - 1; j <y+1  ; j++ )
+        {
+            Matriz[i][j] = verificarLateral(M,x,y);
+        }
+    }
+}
+void interacaoUsuarioBomba(int M[Nmax][Nmax],char Matriz[Nmax][Nmax],int& n,int& m, int& x, int& y,bool& jogotrue)
+{
+
+
+
+    cout <<" escreva a posiçao x y que deseja"<<endl;
+    cin>>x >> y;
+    if (x>=n || y>=m )
+    {
+
+        Matriz[x - 1][y - 1] = '_';
+
+    }
+
+    else
+    {
+        cout << "Posicao invalida repita a jogada"<<endl;
+    }
+
+
+    if (M[x-1][y-1] == 1)
+    {
+        cout << "Voce perdeu"<<endl;
+        jogotrue=false;
+
+    }
+
+}
+
+
+
+
+
+
+
+
+
+void Comandos(int M[][Nmax], char Matriz[][Nmax], int x,int y,  char a, int& Marcaminas,int& n, int& m,bool& jogotrue)
+{
+
+
+
+    if(a == 'd')
+    {
+        interacaoUsuarioBomba(M,Matriz,n,m,x,y,jogotrue);
+    }
+
+    if(a == 'm')
+    {
+        MarcaMina(M, Matriz, x,y,Marcaminas);
+    }
+    if(a =='t')
+    {
+        TalvezMina(M, Matriz, x, y);
+    }
+
+    if(a == 'l')
+    {
+        LimparMarcacao(M,Matriz, x,y);
+    }
+}
+
+int main()
+{
+    int Campo[Nmax][Nmax]= {}, n,m,nivel,Minasmax,minascont=0,Marcaminas = 0,x,y;
+    char campoUsuario[Nmax][Nmax], a;
+    bool jogotrue=true;
+
+
+    cout <<"Escolha o nivel de dificuldade "<<
+         endl<<"1-Iniciante 2-Intermediario 3-personalizado"<<endl;
+
+    cin>>nivel;
+
+
+
+    if(nivel==1)
+    {
+        n=8;
+        m=n;
+        Minasmax=10;
+    }
+    if(nivel==2)
+    {
+        n=16;
+        m=n;
+        Minasmax=40;
+
+    }
+    if (nivel==3)
+    {
+        cout << " Nivel personalizado digite o tamanho do tabuleiro"<<endl;
+        cin>>n>>m;
+        cout <<" digite o numero de minas "<<endl;
+        cin>>Minasmax;
+    }
+
+
+    srand(time(NULL));
+    campoNull(Campo,n,m,Minasmax);
+    GerarMinas(Campo,n,m,Minasmax);
+    campoMinasUsuario(campoUsuario,n,m);
+local:
+    Mostrarcampo(campoUsuario,n,m);
+    cout<<endl<<endl<<endl<<endl;
+    Mostrarcampominas(Campo,n,m);
+    cout <<"Minas marcadas :"<<Marcaminas<<" Marcacao disponiveis "<<Minasmax-Marcaminas<< endl;
+    cout<<"Digite o caracter para a acao"<<endl<<"M- marcar minas"<<endl<<"D-descorir minas"<<endl<<"T-Tavez minas "<<endl<<"L-limpar marcacao "<<endl;
+    cin >> a;
+
+    Comandos(Campo, campoUsuario, n,m,a,Marcaminas,x,y,jogotrue);
+
+
+    if (jogotrue==true)
+        goto local;
+    else
+        campoMinasUsuarioFinal(campoUsuario,Campo,n,m);
+Mostrarcampo(campoUsuario,n,m);
+    return 0;
+}
